@@ -1,5 +1,6 @@
 import pygame
 from classes.ImagePost import *
+from classes.TextPost import *
 from helpers import screen
 from constants import WINDOW_WIDTH, WINDOW_HEIGHT, BLACK
 
@@ -18,8 +19,8 @@ def main():
     background = pygame.transform.scale(background,
                                         (WINDOW_WIDTH, WINDOW_HEIGHT))
 
-    post1 = ImagePost("Paris", "A nice post to our world!", "Images/ronaldo.jpg")
-    post1.default_an_image()
+    post1 = TextPost("Paris", "A nice post to our world!", BLACK, LIGHT_GRAY, "Hi Nati!")
+    # post1 = ImagePost("England", "Happy Birthday!", "Images/ronaldo.jpg")
 
     running = True
     while running:
