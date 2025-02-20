@@ -1,8 +1,12 @@
 import pygame
-from classes.ImagePost import *
-from classes.TextPost import *
-from helpers import screen
-from constants import WINDOW_WIDTH, WINDOW_HEIGHT, BLACK
+
+from buttons import like_button, comment_button, click_post_button, \
+    view_more_comments_button
+from classes.ImagePost import ImagePost
+from classes.Post import Post
+from classes.TextPost import TextPost
+from constants import *
+from helpers import screen, mouse_in_button, read_comment_from_user
 
 
 def main():
@@ -19,8 +23,15 @@ def main():
     background = pygame.transform.scale(background,
                                         (WINDOW_WIDTH, WINDOW_HEIGHT))
 
-    post1 = TextPost("Paris", "A nice post to our world!", BLACK, LIGHT_GRAY, "Hi Nati!")
-    # post1 = ImagePost("England", "Happy Birthday!", "Images/ronaldo.jpg")
+    nati_pov = TextPost("Paris", "A nice post to our world!", BLACK, LIGHT_GRAY, "Hi Nati!")
+    ronaldo = ImagePost("England", "Happy Birthday!", "Images/ronaldo.jpg")
+    noa_camel = ImagePost("Desert", "Love Beer Sheva", "Images/noa_kirel.jpg")
+
+    post_list = [nati_pov, ronaldo, noa_camel]
+    # Position var is the post number in the list that now display
+    current_index = 0
+    # The presented post, hold the Post object that now display
+    current_post = post_list[current_index]
 
     running = True
     while running:
@@ -30,15 +41,40 @@ def main():
             if event.type == pygame.QUIT:
                 running = False
 
-        # Display the background, presented Image, likes, comments, tags and location(on the Image)
+            # Mouse pressed events:
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                # Get the position (x,y) of the mouse press
+                pos = event.pos
+                if mouse_in_button(like_button, pos):
+                    current_post.add_like()
+                # If the mouse pressed on the add comment icon
+                elif mouse_in_button(comment_button, pos):
+                    comment_to_add = read_comment_from_user()
+                    current_post.add_comment(comment_to_add)
+                # If the mouse pressed on the Image - change Image event
+                elif mouse_in_button(click_post_button, pos):
+                    # If the presented post is the last post in the list,
+                    # Change to the first post in the list
+                    if current_index == len(post_list) - 1:
+                        current_index = 0
+                    else:
+                        current_index += 1
+                    current_post = post_list[current_index]
+                    current_post.reset_comments_display_index()
+                elif mouse_in_button(view_more_comments_button, pos):
+                    current_post.view_more_comments()
+
+        # Display the background, presented Image, likes, comments, tags and
+        # location(on the Image)
         screen.fill(BLACK)
         screen.blit(background, (0, 0))
-        post1.display()
+        current_post.display()
 
         # Update display - without input update everything
         pygame.display.update()
 
         # Set the clock tick to be 60 times per second. 60 frames for second.
+        # If we want faster game - increase the parameter.
         clock.tick(60)
     pygame.quit()
     quit()
