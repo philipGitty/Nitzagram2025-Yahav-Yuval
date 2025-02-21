@@ -25,8 +25,10 @@ class Post:
 
         :return: None
         """
+        ## user name:
+        # pass
+
         ## description:
-        # display description
         description_font = pygame.font.SysFont('chalkduster.ttf', UI_FONT_SIZE, bold=True)
         description_to_display = description_font.render(self.description,
                                                          True, (50, 50, 50))
